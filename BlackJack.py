@@ -111,52 +111,51 @@ class Hand(object):
         return self.dealerTotal
 
     def hit(self):
-        choice = ""
+        choiceHit = ""
         if self.playerTotal == 21:
             print("21! You win!!")
             return
-
-        while self.playerTotal != 21 and choice == "yes":
+        choiceHit = input("\nWould you like to hit ['yes', 'no']\n")
+        while choiceHit == "yes":
+            self.hand.append(str(self.deck.getDeck().pop(0)))
+            if re.match("Ace", str(self.hand[len(self.hand) - 1])):
+                choice = int(input("would you like the ace to be a 1 or an 11\n"))
+                if choice == 11:
+                    self.playerTotal += 11
+                elif choice == 1:
+                    self.playerTotal += 1
+            print("Player's Hand:\n")
+            for card in self.hand:
+                print("\t" + card)
+            if re.match("2", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 2
+            elif re.match("3", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 3
+            elif re.match("4", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 4
+            elif re.match("5", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 5
+            elif re.match("6", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 6
+            elif re.match("7", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 7
+            elif re.match("8", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 8
+            elif re.match("9", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 9
+            elif re.match("10|Jack|Queen|King", str(self.hand[len(self.hand) - 1])):
+                self.playerTotal += 10
+            print("total = " + str(self.playerTotal) + "\n")
+            if self.playerTotal > 21:
+                print("You Busted and the house wins. :(")
+                break
             choiceHit = input("\nWould you like to hit? ['yes', 'no']\n")
-            if choiceHit == "yes":
-                self.hand.append(str(self.deck.getDeck().pop(0)))
-                if re.match("Ace", str(self.hand[2])):
-                    choice = int(input("would you like the ace to be a 1 or an 11\n"))
-                    if choice == 11:
-                        self.playerTotal += 11
-                    elif choice == 1:
-                        self.playerTotal += 1
-                print("\n")
-                for card in self.hand:
-                    print("\t" + card)
-                if re.match("2", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 2
-                elif re.match("3", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 3
-                elif re.match("4", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 4
-                elif re.match("5", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 5
-                elif re.match("6", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 6
-                elif re.match("7", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 7
-                elif re.match("8", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 8
-                elif re.match("9", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 9
-                elif re.match("10|Jack|Queen|King", str(self.hand[len(self.hand) - 1])):
-                    self.playerTotal += 10
-                print("total = " + str(self.playerTotal) + "\n")
-                if self.playerTotal > 21:
-                    print("You Busted and the house wins. :(")
-                    break
                 #choice = input("\nWould you like to Hit again?\n")
-            elif choiceHit == "no":
+        if choiceHit == "no":
                 # print("\nDealers hand is...")
                 # for card in self.dealersHand:
                     # print("\t" + card)
-                break
+            return
 
     def hitDealer(self):
         self.dealersHand.append(str(self.deck.getDeck().pop(0)))
@@ -189,9 +188,6 @@ class Hand(object):
         elif re.match("10|Jack|Queen|King", str(self.dealersHand[len(self.dealersHand) - 1])):
             self.dealerTotal += 10
         print("\ntotal = " + str(self.dealerTotal))
-        if self.dealerTotal > 21:
-            print("Dealer Busted, player wins!")
-            return
 
     def dealersPlay(self):
         while self.dealerTotal <= 21 and self.playerTotal > self.dealerTotal:
@@ -204,25 +200,25 @@ class Hand(object):
             for card in self.hand:
                 print(card)
         elif self.dealerTotal > 21:
-            print("Dealer Busted and Player wins\nDealer's loosing hand, with a total of: " +
+            print("\nDealer Busted and Player wins\nDealer's loosing hand, with a total of: " +
                                  str(self.dealerTotal))
             for card in self.dealersHand:
                 print(card)
-            print("\nPlayers winning hand:")
+            print("\nPlayers winning hand with a total of: " + str(self.playerTotal))
             for card in self.hand:
                 print(card)
         elif self.playerTotal == self.dealerTotal:
-            print("Tie Game, no money exchanged.\nDealer's hand: ")
-            for card in self.dealersHand:
-                print(card)
-            print("\nPlayers hand:")
-            for card in self.hand:
-                print(card)
-        if self.dealerTotal > self.playerTotal:
-            print("Dealer wins. Winning hand is:")
+            print("\nTie Game, no money exchanged.\nDealer's hand with a total of: " + str(self.dealerTotal))
             for card in self.dealersHand:
                 print("\t" + card)
-            print("\nPlayers Loosing Hand:")
+            print("\nPlayers hand with a total of: " + str(self.playerTotal))
+            for card in self.hand:
+                print("\t" + card)
+        elif self.dealerTotal > self.playerTotal:
+            print("Dealer wins. Winning hand is, with a total of: " + str(self.dealerTotal))
+            for card in self.dealersHand:
+                print("\t" + card)
+            print("\nPlayers Loosing Hand, with a total of: : " + str(self.playerTotal))
             for card in self.hand:
                 print("\t" + card)
 
@@ -235,5 +231,6 @@ def main():
         hand.dealerHand()
         hand.hit()
         hand.dealersPlay()
+        responce = input("\nWould You like to play a game of Black Jack? ['yes', 'no']\n")
 
 main()
