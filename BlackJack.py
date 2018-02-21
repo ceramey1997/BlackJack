@@ -35,7 +35,9 @@ class Hand(object):
         print("\t" + str(self.dealersHand[0]))
         print("\tUnknown second Dealer card...")
         if self.getDealerTotal() == 21:
-            print("Dealer wins, Game over")
+            print("Dealer wins, Game over\n")
+            for card in self.dealersHand:
+                print("\t" + card)
             return
 
     def getPlayerTotal(self):
@@ -111,7 +113,6 @@ class Hand(object):
         return self.dealerTotal
 
     def hit(self):
-        choiceHit = ""
         if self.playerTotal == 21:
             print("21! You win!!")
             return
@@ -124,7 +125,7 @@ class Hand(object):
                     self.playerTotal += 11
                 elif choice == 1:
                     self.playerTotal += 1
-            print("Player's Hand:\n")
+            print("Player's Hand:")
             for card in self.hand:
                 print("\t" + card)
             if re.match("2", str(self.hand[len(self.hand) - 1])):
@@ -146,9 +147,12 @@ class Hand(object):
             elif re.match("10|Jack|Queen|King", str(self.hand[len(self.hand) - 1])):
                 self.playerTotal += 10
             print("total = " + str(self.playerTotal) + "\n")
+            if self.playerTotal == 21:
+                print("21! You win!!")
+                return
             if self.playerTotal > 21:
                 print("You Busted and the house wins. :(")
-                break
+                return
             choiceHit = input("\nWould you like to hit? ['yes', 'no']\n")
                 #choice = input("\nWould you like to Hit again?\n")
         if choiceHit == "no":
@@ -160,10 +164,10 @@ class Hand(object):
     def hitDealer(self):
         self.dealersHand.append(str(self.deck.getDeck().pop(0)))
         if re.match("Ace", str(self.dealersHand[len(self.dealersHand) - 1])):
-            if self.dealerTotal + 11 > 21:
+            if self.dealerTotal > 10:
                 choice = 1
                 self.dealerTotal += choice
-            elif self.dealerTotal + 11 <= 21:
+            else:
                 choice = 11
                 self.dealerTotal += choice
         print("\nDealers Hand:")
@@ -190,23 +194,31 @@ class Hand(object):
         print("\ntotal = " + str(self.dealerTotal))
 
     def dealersPlay(self):
-        while self.dealerTotal <= 21 and self.playerTotal > self.dealerTotal:
-            self.hitDealer()
+        while self.dealerTotal < 21 and self.playerTotal > self.dealerTotal:
+            if self.playerTotal == 21:
+                return
+            if self.playerTotal > 21:
+                return
+            else:
+                self.hitDealer()
         if self.dealerTotal < self.playerTotal:
             print("Dealer looses.\nDealer's loosing hand, with a total of: " + str(self.dealerTotal))
             for card in self.dealersHand:
-                print(card)
+                print("\t" + card)
             print("\nPlayers winning hand, with a total of: " + str(self.playerTotal))
             for card in self.hand:
-                print(card)
+                print("\t" + card)
         elif self.dealerTotal > 21:
-            print("\nDealer Busted and Player wins\nDealer's loosing hand, with a total of: " +
-                                 str(self.dealerTotal))
-            for card in self.dealersHand:
-                print(card)
-            print("\nPlayers winning hand with a total of: " + str(self.playerTotal))
-            for card in self.hand:
-                print(card)
+            if self.playerTotal <= 21:
+                print("\nDealer Busted and Player wins:\n\nDealer's loosing hand, with a total of: " +
+                                        str(self.dealerTotal))
+                for card in self.dealersHand:
+                    print("\t" + card)
+                print("\nPlayers winning hand with a total of: " + str(self.playerTotal))
+                for card in self.hand:
+                    print("\t" + card)
+            else:
+                print("\nDealer and Player Busted. Therefore Dealer Wins :/")
         elif self.playerTotal == self.dealerTotal:
             print("\nTie Game, no money exchanged.\nDealer's hand with a total of: " + str(self.dealerTotal))
             for card in self.dealersHand:
